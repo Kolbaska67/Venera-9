@@ -11,10 +11,9 @@ Speed = []
 Time = []
 SpeedX = []
 SpeedY = []
-# Получаем ориентацию корабля
 
+# Получаем ориентацию корабля
 Orbit = vessel.orbit.body.reference_frame
-reference_frame = vessel.reference_frame
 
 # Получаем данные
 while True:
@@ -38,5 +37,3 @@ data = {"speed": Speed, "height": Height, "time": Time, "speedX": SpeedX, "speed
 
 with open("graphic.json", "w") as f:
     json.dump(fp=f,obj=data)
-
-f.close()
