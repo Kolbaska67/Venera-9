@@ -17,19 +17,24 @@ SpeedZ = []
 
 # Получаем ориентацию корабля
 Orbit = vessel.orbit.body.reference_frame
-position = vessel.position()
-velocity = vessel.velocity()
+
+reference_frame = vessel.orbit.body.reference_frame
+
+Position = vessel.position(reference_frame)
+velocity = vessel.velocity(reference_frame)
 
 # Получение начального положения корабля для вычисления перемещения
-initialPositionX = position[0]
-initialPositionY = position[1]
-initialPositionZ = position[2]
+initialPositionX = Position[0]
+initialPositionY = Position[1]
+initialPositionZ = Position[2]
 
 # Получаем данные
 while True:
     Time.append(vessel.met) # время в c
     Height.append(vessel.flight(Orbit).mean_altitude) # высота в м
     
+    velocity = vessel.velocity(reference_frame)
+
     # скорости в проекциях 
     vertical_speed = vessel.flight(vessel.orbit.body.reference_frame).vertical_speed / 1000 # скорость по X в км/c
     horizontal_speed = vessel.flight(vessel.orbit.body.reference_frame).horizontal_speed / 1000 # скорость по Y в км/c
@@ -38,9 +43,14 @@ while True:
     SpeedZ.append(velocity[2])
     
     # положение в пространстве
-    currentPositionX = position[0]
-    currentPositionY = position[1]
-    currentPositionZ = position[2]
+
+    reference_frame = vessel.orbit.body.reference_frame
+
+    Position = vessel.position(reference_frame)
+
+    currentPositionX = Position[0]
+    currentPositionY = Position[1]
+    currentPositionZ = Position[2]
     
     # смешение по проециям
     DragX.append(currentPositionX - initialPositionX)
@@ -51,7 +61,7 @@ while True:
         print("Истекло 250 секунд")   
         break
     
-    if (vessel.flight(Orbit).mean_altitude == 70_000):
+    if (vessel.flight(Orbit).mean_altitude >= 70_000):
         print("Мы вышли на орбиту")
         break
 
