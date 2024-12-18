@@ -15,7 +15,10 @@ DragX = graphics["dragX"]
 DragY = graphics["dragY"]
 DragZ = graphics["dragZ"]
 
-# Строим графики
+# Строим график
+
+plt.figure(figsize=(15, 15))   
+
 plt.subplot(4, 2, 1)
 plt.plot(Time, Height)
 plt.xlabel('Время, с')

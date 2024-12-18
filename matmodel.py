@@ -53,17 +53,27 @@ def acceleration_of_free_fall(h):
     return (M * G) / ((REARTH + h) ** 2)
 
 
-def system(y, t, number_stage):
-    # x1 - координата по X
-    # x2 - координата по Y
-    # x3 - координата по Z
-    # x4 - скорость по X
-    # x5 - скорость по Y
-    # x6 - скорость по Z
-    # x7 - ускорение по X
-    # x8 - ускорение по Y
-    # x9 - ускорение по Z
-   
+def system(y: list, t: list, number_stage: int) -> list:
+    """system
+    Вычисление необходимой функции для решения ОДУ
+
+    Args:
+        y (list): список переменных:
+            x1 - координата по X
+            x2 - координата по Y
+            x3 - координата по Z
+            x4 - скорость по X
+            x5 - скорость по Y
+            x6 - скорость по Z
+            x7 - ускорение по X
+            x8 - ускорение по Y
+            x9 - ускорение по Z
+        t (list): последовательность точек, для которых требуется найти значение y. 
+        number_stage (int): номер ступени
+
+    Returns:
+        list: массив, содержащий значение y для каждого желаемого времени в t, с начальным значением y0 в первой строке.
+    """
     x1, x4, x2, x5, x3, x6 = y
 
     stage = stages[number_stage]
@@ -99,11 +109,9 @@ time1 = np.linspace(0, stages[0]["burn_time"])
 result1= odeint(system, initial_conditions, time1, args=(0,))
 
 x1 = [result1[:, 0]]
-x2 = [result1[:, 2]]
 x4 = [result1[:, 1]]
-x5 = [result1[:, 3]]
+x2 = [result1[:, 2]]
 x3 = [result1[:, 4]]
-x6 = [result1[:, 5]]
 
 plt.subplot(4, 2, 1)
 plt.plot(time1, x3)
@@ -115,18 +123,6 @@ plt.subplot(4, 2, 3)
 plt.plot(time1, x4)
 plt.xlabel('Время, с')
 plt.ylabel('Скорость по оси X, км/с')
-plt.grid(color='black') 
-
-plt.subplot(4, 2, 4)
-plt.plot(time1, x5)
-plt.xlabel('Время, с')
-plt.ylabel('Скорость по оси Y, км/с')
-plt.grid(color='black') 
-
-plt.subplot(4, 2, 5)
-plt.plot(time1, x6)
-plt.xlabel('Время, с')
-plt.ylabel('Скорость по оси Z, км/с')
 plt.grid(color='black') 
 
 plt.subplot(4, 2, 6)

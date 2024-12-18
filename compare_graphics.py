@@ -20,6 +20,23 @@ def abs_error(array1: list, array2: list) -> list:
     for i in range(array1):
         result.append(abs(array1[i] - array2[i]))
     return result
+
+
+def mediana(array: list) -> float:
+    """mediana
+    Вычисляет значение медианы в двух функциях
+
+    Args:
+        array1 (list): Значение функции 1
+
+    Returns:
+        float: медианное значение
+    """
+    n = len(array)
+    array.sort()
+    if (n % 2 == 0):
+        return array[n // 2]
+    return (array[n // 2 + 1] + array[n // 2]) / 2
         
 
 stages = [
@@ -74,15 +91,26 @@ def acceleration_of_free_fall(h):
 
 
 def system(y, t, number_stage):
-    # x1 - координата по X
-    # x2 - координата по Y
-    # x3 - координата по Z
-    # x4 - скорость по X
-    # x5 - скорость по Y
-    # x6 - скорость по Z
-    # x7 - ускорение по X
-    # x8 - ускорение по Y
-    # x9 - ускорение по Z
+    """system
+    Вычисление необходимой функции для решения ОДУ
+
+    Args:
+        y (list): список переменных:
+            x1 - координата по X
+            x2 - координата по Y
+            x3 - координата по Z
+            x4 - скорость по X
+            x5 - скорость по Y
+            x6 - скорость по Z
+            x7 - ускорение по X
+            x8 - ускорение по Y
+            x9 - ускорение по Z
+        t (list): последовательность точек, для которых требуется найти значение y. 
+        number_stage (int): номер ступени
+
+    Returns:
+        list: массив, содержащий значение y для каждого желаемого времени в t, с начальным значением y0 в первой строке.
+    """
    
     x1, x4, x2, x5, x3, x6 = y
 
@@ -128,14 +156,10 @@ Time = Time[:m]
 time1 = time1[:m]
 
 SpeedX = graphics["speedX"][:m]
-SpeedY = graphics["speedY"][:m]
-SpeedZ = graphics["speedZ"][:m]
 Height = graphics["height"][:m]
 DragX = graphics["dragX"][:m]
 DragY = graphics["dragY"][:m]
 DragZ = graphics["dragZ"][:m]
-
-
 
 x1 = [result1[:, 0]][:m]
 x4 = [result1[:, 1]][:m]
@@ -146,15 +170,20 @@ x6 = [result1[:, 5]][:m]
 
 Abs_error_height = abs_error(Height, x3)
 Abs_error_speedX = abs_error(SpeedX, x4)
-Abs_error_speedY = abs_error(SpeedY, x5)
-Abs_error_speedZ = abs_error(SpeedZ, x6)
 Abs_error_dragX = abs_error(DragX, x1)
 Abs_error_dragY = abs_error(DragY, x2)
 Abs_error_dragZ = abs_error(DragZ, x3)
 
 
+print(f"Медина погрешности высоты: {mediana(Abs_error_height)}")
+print(f"Медина погрешности скорости по X: {mediana(Abs_error_speedX)}")
+print(f"Медина погрешности смещения по X: {mediana(Abs_error_dragX)}")
+print(f"Медина погрешности смещения по Y: {mediana(Abs_error_dragY)}")
+print(f"Медина погрешности смещения по Z: {mediana(Abs_error_dragZ)}")
 
-plt.subplot(4, 2, 1)
+plt.figure(figsize=(15, 15))    
+
+plt.subplot(3, 2, 1)
 plt.plot(time1, x3, color="red", label="Высота от времени KSP")
 plt.plot(Time, Height, color="blue", label="Высота от времени МатМодель")
 plt.plot(Time, Abs_error_height, color="orange", label="Абсолютная погрешность")
@@ -163,7 +192,7 @@ plt.ylabel('Высота, м')
 plt.grid(color='black') 
 plt.legend()
 
-plt.subplot(4, 2, 2)
+plt.subplot(3, 2, 2)
 plt.plot(time1, x4, color="red", label="Скорость по X KSP")
 plt.plot(Time, SpeedX, color="blue", label="Скорость по X МатМодель")
 plt.plot(Time, Abs_error_speedX, color="orange", label="Абсолютная погрешность")
@@ -172,25 +201,7 @@ plt.ylabel('Скорость по оси X, км/с')
 plt.grid(color='black') 
 plt.legend()
 
-plt.subplot(4, 2, 4)
-plt.plot(time1, x5, color="red", label="Скорость по Y KSP")
-plt.plot(Time, SpeedY, color="blue", label="Скорость по Y МатМодель")
-plt.plot(Time, Abs_error_speedY, color="orange", label="Абсолютная погрешность")
-plt.xlabel('Время, с')
-plt.ylabel('Скорость по оси Y, км/с')
-plt.grid(color='black') 
-plt.legend()
-
-plt.subplot(4, 2, 5)
-plt.plot(time1, x6, color="red", label="Скорость по Z KSP")
-plt.plot(Time, SpeedZ, color="blue", label="Скорость по Z МатМодель")
-plt.plot(Time, Abs_error_speedZ, color="orange", label="Абсолютная погрешность")
-plt.xlabel('Время, с')
-plt.ylabel('Скорость по оси Z, км/с')
-plt.grid(color='black') 
-plt.legend()
-
-plt.subplot(4, 2, 6)
+plt.subplot(3, 2, 6)
 plt.plot(time1, x1, color="red", label="Смещение по X KSP")
 plt.plot(Time, DragX, color="blue", label="Смещение по X МатМодель")
 plt.plot(Time, Abs_error_dragX, color="orange", label="Абсолютная погрешность")
@@ -199,7 +210,7 @@ plt.ylabel('Смещение по оси X, м')
 plt.grid(color='black') 
 plt.legend()
 
-plt.subplot(4, 2, 7)
+plt.subplot(3, 2, 7)
 plt.plot(time1, x2, color="red", label="Смещение по Y KSP")
 plt.plot(Time, DragY, color="blue", label="Смещение по Y МатМодель")
 plt.plot(Time, Abs_error_dragY, color="orange", label="Абсолютная погрешность")
@@ -208,7 +219,7 @@ plt.ylabel('Смещение по оси Y, м')
 plt.grid(color='black') 
 plt.legend()
 
-plt.subplot(4, 2, 8)
+plt.subplot(3, 2, 8)
 plt.plot(time1, x3, color="red", label="Смещение по Z KSP")
 plt.plot(Time, DragZ, color="blue", label="Смещение по Z МатМодель")
 plt.plot(Time, Abs_error_dragZ, color="orange", label="Абсолютная погрешность")
