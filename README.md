@@ -8,3 +8,6 @@
 * Ефремова Виктория
 * Рыбин Владимир
 * Скворцов Юрий
+
+### Ссылка на наш гугл диск:
+https://drive.google.com/drive/folders/1hE88MfqoWYbtfsDAPYDkyINwz2XxHpEc?usp=sharing
