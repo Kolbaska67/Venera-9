@@ -155,7 +155,6 @@ m = min(len(Time), len(time1))
 Time = Time[:m]
 time1 = time1[:m]
 
-SpeedX = graphics["speedX"][:m]
 Height = graphics["height"][:m]
 DragX = graphics["dragX"][:m]
 DragY = graphics["dragY"][:m]
@@ -169,14 +168,12 @@ x3 = [result1[:, 4]][:m]
 x6 = [result1[:, 5]][:m]
 
 Abs_error_height = abs_error(Height, x3)
-Abs_error_speedX = abs_error(SpeedX, x4)
 Abs_error_dragX = abs_error(DragX, x1)
 Abs_error_dragY = abs_error(DragY, x2)
 Abs_error_dragZ = abs_error(DragZ, x3)
 
 
 print(f"Медина погрешности высоты: {mediana(Abs_error_height)}")
-print(f"Медина погрешности скорости по X: {mediana(Abs_error_speedX)}")
 print(f"Медина погрешности смещения по X: {mediana(Abs_error_dragX)}")
 print(f"Медина погрешности смещения по Y: {mediana(Abs_error_dragY)}")
 print(f"Медина погрешности смещения по Z: {mediana(Abs_error_dragZ)}")
@@ -189,15 +186,6 @@ plt.plot(Time, Height, color="blue", label="Высота от времени М�
 plt.plot(Time, Abs_error_height, color="orange", label="Абсолютная погрешность")
 plt.xlabel('Время, с')
 plt.ylabel('Высота, м')
-plt.grid(color='black') 
-plt.legend()
-
-plt.subplot(3, 2, 2)
-plt.plot(time1, x4, color="red", label="Скорость по X KSP")
-plt.plot(Time, SpeedX, color="blue", label="Скорость по X МатМодель")
-plt.plot(Time, Abs_error_speedX, color="orange", label="Абсолютная погрешность")
-plt.xlabel('Время, с')
-plt.ylabel('Скорость по оси X, км/с')
 plt.grid(color='black') 
 plt.legend()
 

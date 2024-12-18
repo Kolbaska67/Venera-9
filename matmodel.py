@@ -109,7 +109,6 @@ time1 = np.linspace(0, stages[0]["burn_time"])
 result1= odeint(system, initial_conditions, time1, args=(0,))
 
 x1 = [result1[:, 0]]
-x4 = [result1[:, 1]]
 x2 = [result1[:, 2]]
 x3 = [result1[:, 4]]
 
@@ -117,12 +116,6 @@ plt.subplot(4, 2, 1)
 plt.plot(time1, x3)
 plt.xlabel('Время, с')
 plt.ylabel('Высота, м')
-plt.grid(color='black') 
-
-plt.subplot(4, 2, 3)
-plt.plot(time1, x4)
-plt.xlabel('Время, с')
-plt.ylabel('Скорость по оси X, км/с')
 plt.grid(color='black') 
 
 plt.subplot(4, 2, 6)
