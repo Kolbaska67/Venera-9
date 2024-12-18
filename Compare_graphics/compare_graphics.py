@@ -24,7 +24,6 @@ def abs_error(array1: list, array2: list) -> list:
 
 def mediana(array: list) -> float:
     """mediana
-    Вычисляет значение медианы в двух функциях
 
     Args:
         array1 (list): Значение функции 1
