@@ -5,6 +5,12 @@ from math import cos, sin, sqrt
 import json
 
 
+def improve_radius(array):
+    for i in range(len(array)):
+        array[i] += 64000
+    return array
+
+
 def abs_error(array1: list, array2: list) -> list:
     """abs_error
     Функция, которая высчитывает абсолютную погрешность 
@@ -47,8 +53,8 @@ def otn_error(abs_error, array):
 
 stages = [ 
     {'massa_stage': 50_000, 'massa_fuel': 110_000, 'burn_time': 90, 'f_tract': 2_700_000}, 
-    {'massa_stage': 15_000, 'massa_fuel': 20_000, 'burn_time': 60, 'f_tract': 500_000}, 
-    {'massa_stage': 10_000, 'massa_fuel': 600, 'burn_time': 60, 'f_tract': 6_000} 
+    {'massa_stage': 15_000, 'massa_fuel': 20_000, 'burn_time': 65, 'f_tract': 500_000}, 
+    {'massa_stage': 10_000, 'massa_fuel': 600, 'burn_time': 100, 'f_tract': -15_000} 
 ] 
 
 e = 2.718281828459045
@@ -120,7 +126,6 @@ def system(y: list, t: list, num_stage: int) -> list:
     """
 
     Xx, speedX, Xy, speedY = y
-
     global T
 
     stage = stages[num_stage]

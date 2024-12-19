@@ -3,11 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
 stages = [ 
-    {'massa_stage': 50_000, 'massa_fuel': 110_000, 'burn_time': 100, 'f_tract': 2_700_000}, 
-    {'massa_stage': 15_000, 'massa_fuel': 20_000, 'burn_time': 120, 'f_tract': 500_000}, 
-    {'massa_stage': 25_000, 'massa_fuel': 600, 'burn_time': 50, 'f_tract': 50_000} 
+    {'massa_stage': 50_000, 'massa_fuel': 110_000, 'burn_time': 90, 'f_tract': 2_700_000}, 
+    {'massa_stage': 15_000, 'massa_fuel': 20_000, 'burn_time': 65, 'f_tract': 500_000}, 
+    {'massa_stage': 10_000, 'massa_fuel': 600, 'burn_time': 100, 'f_tract': -15_000} 
 ] 
-
 e = 2.718281828459045
 pi = 3.14
 
@@ -108,7 +107,7 @@ def system(y: list, t: list, num_stage: int) -> list:
     return [speedX, dSpeedX, speedY, dSpeedY]
 
 
-start_value = [0, 0, 0, 0] # начальные значения
+start_value = [0, 0, 6400, 0] # начальные значения
 
 # первая ступень 
 time1 = np.linspace(0, stages[0]["burn_time"]) # Время работы первой ступени 
