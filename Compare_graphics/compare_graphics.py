@@ -17,7 +17,7 @@ def abs_error(array1: list, array2: list) -> list:
         list: Абсолютную погрешность
     """
     result = []
-    for i in range(array1):
+    for i in range(len(array1)):
         result.append(abs(array1[i] - array2[i]))
     return result
 
@@ -46,9 +46,9 @@ def otn_error(abs_error, array):
         
 
 stages = [ 
-    {'massa_stage': 50_000, 'massa_fuel': 110_000, 'burn_time': 100, 'f_tract': 2_700_000}, 
-    {'massa_stage': 15_000, 'massa_fuel': 20_000, 'burn_time': 120, 'f_tract': 500_000}, 
-    {'massa_stage': 25_000, 'massa_fuel': 600, 'burn_time': 50, 'f_tract': 50_000} 
+    {'massa_stage': 50_000, 'massa_fuel': 110_000, 'burn_time': 90, 'f_tract': 2_700_000}, 
+    {'massa_stage': 15_000, 'massa_fuel': 20_000, 'burn_time': 60, 'f_tract': 500_000}, 
+    {'massa_stage': 10_000, 'massa_fuel': 600, 'burn_time': 60, 'f_tract': 6_000} 
 ] 
 
 e = 2.718281828459045
@@ -94,7 +94,7 @@ def kf(massa_fuel: float, time: float) -> float:
     return massa_fuel / time 
 
 
-massa_rocket = 210000  # кг масса ракеты
+massa_rocket = 210_000  # кг масса ракеты
 T = 300  # температура ракеты 
 
 
@@ -154,18 +154,18 @@ def system(y: list, t: list, num_stage: int) -> list:
 start_value = [0, 0, 0, 0] # начальные значения
 
 # первая ступень 
-time1 = np.linspace(0, stages[0]["burn_time"]) # Время работы первой ступени 
+time1 = np.linspace(0, stages[0]["burn_time"],20_000) # Время работы первой ступени 
 result1 = odeint(system, start_value, time1, args=(0,)) # Решение системы для первой ступени 
  
 # вторая ступень 
 massa_rocket -= (stages[0]['massa_stage'] + stages[0]['massa_fuel']) # Масса ракеты после отсоединения первой ступени 
-time2 = np.linspace(0, stages[1]["burn_time"], 100) # Время работы второй ступени 
+time2 = np.linspace(0, stages[1]["burn_time"], 19_000) # Время работы второй ступени 
 result2 = odeint(system, result1[-1, :], time2, args=(1,)) # Решение системы для второй ступени
 
 
 # третья ступень 
 massa_rocket -= (stages[1]['massa_stage'] + stages[1]['massa_fuel']) # Масса ракеты после отсоединения второй ступени 
-time3 = np.linspace(0, stages[2]["burn_time"], 100) # Время работы третьей ступени 
+time3 = np.linspace(0, stages[2]["burn_time"], 1300) # Время работы третьей ступени 
 result3 = odeint(system, result2[-1, :], time3, args=(2,)) # Решение системы для третьей ступени 
   
 time = np.concatenate([time1, time1[-1] + time2, time1[-1] + time2[-1] + time3]) 
@@ -174,10 +174,10 @@ graphics = dict()
 with open("KSP_graphics/graphic.json") as f:
     graphics = json.load(f)
     
-Time = graphics["time"]
-m = min(len(Time), len(time))
-Time = Time[:m]
-time1 = time1[:m]
+timeKSP = graphics["time"]
+m = min(len(timeKSP), len(time))
+timeKSP = timeKSP[:m]
+time = time
 
 x_coords_KSP = graphics["x_coords"][:m]
 y_coords_KSP = graphics["y_coords"][:m]
@@ -185,10 +185,10 @@ speedX_KSP = graphics["speedX"][:m]
 speedY_KSP = graphics["speedY"][:m]
 
 # Объединение результатов 
-Xx = np.concatenate([result1[:, 0], result2[:, 0], result3[:, 0]])[:m]
-SpeedX = np.concatenate([result1[:, 1], result2[:, 1], result3[:, 1]])[:m] 
-Xy = np.concatenate([result1[:, 2], result2[:, 2], result3[:, 2]])[:m]
-SpeedY = np.concatenate([result1[:, 3], result2[:, 3], result3[:, 3]])[:m]
+Xx = np.concatenate([result1[:, 0], result2[:, 0], result3[:, 0]])
+SpeedX = np.concatenate([result1[:, 1], result2[:, 1], result3[:, 1]]) 
+Xy = np.concatenate([result1[:, 2], result2[:, 2], result3[:, 2]])
+SpeedY = np.concatenate([result1[:, 3], result2[:, 3], result3[:, 3]])
 
 Abs_error_y_coords = abs_error(y_coords_KSP, Xy)
 Abs_error_x_coords = abs_error(x_coords_KSP, Xx)
@@ -202,42 +202,42 @@ print(f"Медина погрешности скорости по Y: {mediana(Ab
 
 plt.figure(figsize=(15, 15))    
 
-plt.subplot(3, 2, 1)
-plt.plot(time1, x_coords_KSP, color="red", label="Координата по X KSP")
-plt.plot(Time, Xx, color="blue", label="Координата по X МатМодель")
-plt.plot(Time, Abs_error_x_coords, color="orange", label="Абсолютная погрешность")
+plt.subplot(2, 2, 1)
+plt.plot(timeKSP, x_coords_KSP, color="red", label="Координата по X KSP")
+plt.plot(time, Xx, color="blue", label="Координата по X МатМодель")
+plt.plot(time, Abs_error_x_coords, color="orange", label="Абсолютная погрешность")
 plt.xlabel('Время, с')
 plt.ylabel('Координата по X, м')
 plt.grid(color='black') 
 plt.legend()
 
-plt.subplot(3, 2, 2)
-plt.plot(time1, y_coords_KSP, color="red", label="Координата по Y KSP")
-plt.plot(Time, Xy, color="blue", label="Координата по Y МатМодель")
-plt.plot(Time, Abs_error_y_coords, color="orange", label="Абсолютная погрешность")
+plt.subplot(2, 2, 2)
+plt.plot(timeKSP, y_coords_KSP, color="red", label="Координата по Y KSP")
+plt.plot(time, Xy, color="blue", label="Координата по Y МатМодель")
+plt.plot(time, Abs_error_y_coords, color="orange", label="Абсолютная погрешность")
 plt.xlabel('Время, с')
 plt.ylabel('Координата по Y, м')
 plt.grid(color='black') 
 plt.legend()
 
-plt.subplot(3, 2, 3)
-plt.plot(time1, speedX_KSP, color="red", label="Скорость по X KSP")
-plt.plot(Time, SpeedX, color="blue", label="Скорось по X МатМодель")
-plt.plot(Time, Abs_error_speedX, color="orange", label="Абсолютная погрешность")
+plt.subplot(2, 2, 3)
+plt.plot(timeKSP, speedX_KSP, color="red", label="Скорость по X KSP")
+plt.plot(time, SpeedX, color="blue", label="Скорось по X МатМодель")
+plt.plot(time, Abs_error_speedX, color="orange", label="Абсолютная погрешность")
 plt.xlabel('Время, с')
 plt.ylabel('Скорость по оси X, м/c')
 plt.grid(color='black') 
 plt.legend()
 
-plt.subplot(3, 2, 4)
-plt.plot(time1, speedY_KSP, color="red", label="Скорость по Y KSP")
-plt.plot(Time, SpeedY, color="blue", label="Скорость по Y МатМодель")
-plt.plot(Time, Abs_error_speedY, color="orange", label="Абсолютная погрешность")
+plt.subplot(2, 2, 4)
+plt.plot(timeKSP, speedY_KSP, color="red", label="Скорость по Y KSP")
+plt.plot(time, SpeedY, color="blue", label="Скорость по Y МатМодель")
+plt.plot(time, Abs_error_speedY, color="orange", label="Абсолютная погрешность")
 plt.xlabel('Время, с')
 plt.ylabel('Скорость по оси Y, м/c')
 plt.grid(color='black') 
 plt.legend()
 
 plt.tight_layout(pad=1.5)
-plt.savefig("compare_graphics.png")
+plt.savefig("Compare_graphics/compare_graphics.png")
 plt.show()

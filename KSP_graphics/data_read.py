@@ -1,6 +1,7 @@
 import numpy as np
 import krpc  # библиотека для подключения к KSP и сбора данных
 import json  # библиотека для работы с json форматом
+import time
 
 # подключение к серверу KSP
 connection = krpc.connect(name='VARKT')
@@ -49,9 +50,11 @@ while True:
         print("Истекло 250 секунд")   
         break
     
+    time.sleep(1)
+    
 print("Данные считаны")
 
 data = {"y_coords": y_coords, "x_coords": x_coords, "time": Time, "speedX": SpeedX, "speedY": SpeedY}
 
-with open("graphic.json", "w") as f:
+with open("KSP_graphics/graphic.json", "w") as f:
     json.dump(fp=f,obj=data)

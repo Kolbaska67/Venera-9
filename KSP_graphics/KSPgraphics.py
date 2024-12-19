@@ -3,7 +3,7 @@ import json  # библиотека для работы с json
 
 # получаем данные из json файла
 graphics = dict()
-with open("graphic.json") as f:
+with open("KSP_graphics/graphic.json") as f:
     graphics = json.load(f)
     
 SpeedX = graphics["speedX"]
